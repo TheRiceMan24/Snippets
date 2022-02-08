@@ -1,0 +1,17 @@
+import hashlib
+import getpass
+
+def Login(Details):
+    #Login system to compare a user input to a stored value
+    LoggedIn = False
+    for attempts in range(3): #Allows three attempts at login
+        if LoggedIn == False:
+            Username = input("Enter your username: ")
+            Password = getpass.getpass("Enter Your Password: ")
+            passwordhash = hashlib.sha512(Password.encode('utf8')).hexdigest()#Converts password to hash for added security
+            for check in Details:
+                if check[0] == Username and check[1] == passwordhash: #Checks to see if username and password match up to a stored set
+                    LoggedIn = True
+            if LoggedIn == False:
+                print("\nIncorrect Details, Try again!\n")
+    return LoggedIn #Returns True / False to inform the programme if it is an authorised user
