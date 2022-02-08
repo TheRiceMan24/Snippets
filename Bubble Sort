@@ -1,0 +1,12 @@
+def bubble_sort(ListToSort):
+  #Function to perform a bubble sort on a list of intergers
+  SwapMade = True #Sets flag to true
+  while SwapMade == True: #Checks for flag, loops if true
+    SwapMade = False #Resets flag
+    for i in range(len(ListToSort)-1): #Goes through list item by item
+      if ListToSort[i] <= ListToSort[i+1]: #Testing if sorted
+        temp = ListToSort[i] #Assignts tempory variable to hold value
+        ListToSort[i] = ListToSort[i+1] #Switches places of items in list
+        ListToSort[i+1] = temp #Re-inserts removed item
+        SwapMade = True #Sets Flag
+  return ListToSort #Gives back the sorted list
