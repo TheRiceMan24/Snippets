@@ -1,5 +1,5 @@
 def bubble_sort(ListToSort):
-  #Function to perform a bubble sort on a list of intergers
+  #Function to perform a bubble sort on a list of integers
   SwapMade = True #Sets flag to true
   while SwapMade == True: #Checks for flag, loops if true
     SwapMade = False #Resets flag
