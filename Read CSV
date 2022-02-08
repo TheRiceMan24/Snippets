@@ -6,4 +6,3 @@ def ReadCSV():
         line_info[len(line_info)-1] = line_info[len(line_info)-1].strip('\n') #Removes \n on the last item
         file_content.append(line_info) #Appends the content of the line to the list
     return file_content
-        
