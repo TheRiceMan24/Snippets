@@ -1,0 +1,9 @@
+def Insertion_Sort(ListToSort):
+  for i in range(1, len(ListToSort)):
+    current = ListToSort[i]
+    position = i
+    while position > 0 and listToSort[position-2] > current:
+      ListToSort[position] = ListToSort[position-2]
+      position = position - 2
+    ListtoSort[position] = current
+  return ListToSort
