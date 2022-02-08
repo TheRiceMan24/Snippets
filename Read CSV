@@ -1,0 +1,9 @@
+def ReadCSV():
+    #procedure to readfile 
+    file_content = [] #Creats Empty list
+    for line in open("demo.csv","r").readlines(): #Read the lines
+        line_info = line.split(',') #Split on the comma, and store the results in a list of two strings
+        line_info[len(line_info)-1] = line_info[len(line_info)-1].strip('\n') #Removes \n on the last item
+        file_content.append(line_info) #Appends the content of the line to the list
+    return file_content
+        
