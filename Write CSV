@@ -1,0 +1,10 @@
+def WriteCSV(to_file):
+    #This re-writes the account file when a change is made
+    temp = "" #Temporary variable to store the list in a string format
+    for single_line in to_file: #For loop to get the indervidual rows of the 2D list
+        for single_value in single_line: #For loop to get the indervidual characters of the row
+            temp.append(single_value + ",") #Formats the inputed Values
+        temp.append("\n") #Creates a new line
+    f1 = open("demo.csv","w") #Opens File
+    f1.write(temp) #Re-Writes File
+    f1.close #Closes and Saves File
