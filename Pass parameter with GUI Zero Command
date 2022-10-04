@@ -1,0 +1,3 @@
+command= lambda: set_stars(1)
+
+#The "lambda:" allows you to place in brackets after calling the function, this allows you to pass in a paramiter
