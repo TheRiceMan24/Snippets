@@ -1,0 +1,10 @@
+def query_database(database, query):
+  #Runs a query statement in an sql database
+	Lconn = sqlite3.connect(database)
+	cur = Lconn.cursor()			# use a local cursor
+	cur.execute(query)
+	rows = cur.fetchall()
+	cur.close()
+	return rows
+  
+# "SELECT * FROM CUSTOMER_DETAILS WHERE userName = ''"
