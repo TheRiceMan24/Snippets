@@ -1,0 +1,7 @@
+def execute_sql(database, sql_statement):
+  #Executes an SQL statment to a database
+	Lconn = sqlite3.connect(database)
+	cur = Lconn.cursor()
+	cur.execute(sql_statement)
+	Lconn.commit()
+	return cur.lastrowid
