@@ -1,11 +1,11 @@
-def login_user():  #### TEST WITH database against entered details 
-	global user_LoggedIn ## variable needed to know who logged in ##
+def login_user():  #Test the entered user details against the stored user data
+	global user_LoggedIn #variable needed to know who logged in
 	if signinUsernameEntry.value == "" or signinPasswordEntry.value == "":
 		info("Error", "Please fill in all feilds!")
 	else:
 		sqlselect = "SELECT * FROM CUSTOMER_DETAILS WHERE userName = '"+signinUsernameEntry.value+"'"
 		rows = query_database(database_file, sqlselect)
-		if len(rows) == 0: ### This checks that the user was found ###
+		if len(rows) == 0: #This checks that the user was found ###
 				info("Error", "You must enter a valid Login")
 		elif rows[0][2] != signinPasswordEntry.value: #Takes password from row of SQL
 			info("Error", "You must enter a valid Login")
