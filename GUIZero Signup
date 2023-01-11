@@ -1,47 +1,56 @@
-def signup_user(): #Validation to ensure that valid details have been added
-	global user_LoggedIn
-	sqlselect = "SELECT * FROM CUSTOMER_DETAILS WHERE userName = '"+signupUsernameEntry.value+"'"
-	rows = query_database(database_file, sqlselect)
-	rows = len(rows)
-	if signupTCEntry.value == 0: #test to see if the user Accepted T&C
-		info("Terms And Conditions", "Please Accept the terms and conditions!")
-	elif len(signupUsernameEntry.value) < 4 or len(signupUsernameEntry.value) > 16: #Ensures username length
-		info("Username", "Please use between 4 and 16 characters!")
-	elif rows >= 1: #Ensures name is not in use
-		info("Username", "This Name is currently in use!")
-	elif signupPasswordEntry.value.isalpha(): #Test if password is only alphabetical
-		info("Password", "Please include Numbers in password!")
-	elif signupPasswordEntry.value.isalnum(): #Tests if password contains symbols
-		info("Password", "Please include symbols in password!")
-	elif len(signupPasswordEntry.value) < 8: #Ensures minimum password length
-		info("Password", "Please increase length of password to at least 8 characters!")
-	elif signupPasswordEntry.value != signupPasswordConfirmEntry.value: #Ensures both passwords are matching
-		info("Password", "Please make sure both passwords match!")
-	elif signupFirstnameEntry.value == "": #Name has been entered
-		info("First Name", "Please Enter Your first name!")
-	elif signupFirstnameEntry.value.isalpha() == False: #Name contains no symbols or numbers
-		info("First Name", "First name cannot contain numbers or symbols!")
-	elif signupLastnameEntry.value == "": #Name has been entered
-		info("Last Name", "Please Enter Your last name!")
-	elif signupLastnameEntry.value.isalpha() == False: #Name contains no symbols or numbers
-		info("Last Name", "Last name cannot contain numbers or symbols!")
-	elif signupPhoneEntry.value.isnumeric() == False: #Ensures phonenumber is numerical
-		info("Phone Number", "Invalid phone number!")
-	elif len(signupPhoneEntry.value) != 11: #Phonenumber is the correct length
-		info("Phone Number", "Invalid phone number!")
-	elif len(signupPostcodeEntry.value) < 5 or len(signupPostcodeEntry.value) > 7: #Tests postcode is the correct length
-		info("Post Code", "Invalid post code!")
-	elif signupAddressEntry.value == "": #Address line is not empty
-		info("Address Line", "Please enter your first adress line!")
-	elif signupTownEntry.value == "": #Town box is not empty
-		info("Town", "Please enter your town!")
-	else:
-		sqlinsert = "INSERT INTO CUSTOMER_DETAILS (userName, userPassword, userFirstName, userLastName, userAddress, userPostCode, userTown, userPhoneNumber) VALUES ('"+signupUsernameEntry.value+"', '"+signupPasswordEntry.value+"', '"+signupFirstnameEntry.value+"', '"+signupLastnameEntry.value+"', '"+signupAddressEntry.value+"', '"+signupPostcodeEntry.value+"', '"+signupTownEntry.value+"', '"+signupPhoneEntry.value+"');"
-		execute_sql(database_file, sqlinsert) #Execute above SQL statement
-		sqlselect = "SELECT * FROM CUSTOMER_DETAILS WHERE userName = '"+signupUsernameEntry.value+"'"
-		rows = query_database(database_file, sqlselect)
-		user_LoggedIn = rows[0][0] #Then finds user and automaticly logs them in
-		signup.hide()
+def signup_user(): 
+    #Validation to ensure that valid details have been added prior to adding to the database
+    global user_LoggedIn
+    sqlflag = False
+    try:
+        sqlselect = "SELECT * FROM userDetails WHERE userEmail = '"+signupEmailEntry.value+"'"
+        if "'" in signupEmailEntry.value or ";" in signupEmailEntry.value or '"' in signupEmailEntry.value:
+            sqlflag = True
+        else:
+            rows = query_database(database, sqlselect)
+    except:
+        sqlflag = True
+    rows = len(rows)
+    if sqlflag == True:
+        info("Nice Try", "Don't do that!")
+    elif signupTCEntry.value == 0: #test to see if the user Accepted T&C
+        info("Terms And Conditions", "Please Accept the terms and conditions!")
+    elif rows >= 1: #Ensures name is not in use
+        info("Email", "This Email is currently in use!")
+    elif "@" not in signupEmailEntry.value and "." not in signupEmailEntry.value: #Ensures that the email contains symbols needed for a valid email
+        info("Email", "Please enter a valid email")
+    elif signupPasswordEntry.value.isalpha(): #Test if password is only alphabetical
+        info("Password", "Please include Numbers in password!")
+    elif signupPasswordEntry.value.isalnum(): #Tests if password contains symbols
+        info("Password", "Please include symbols in password!")
+    elif len(signupPasswordEntry.value) < 8: #Ensures minimum password length
+        info("Password", "Please increase length of password to at least 8 characters!")
+    elif signupPasswordEntry.value != signupPasswordConfirmEntry.value: #Ensures both passwords are matching
+        info("Password", "Please make sure both passwords match!")
+    elif signupFirstnameEntry.value == "": #Name has been entered
+        info("First Name", "Please Enter Your first name!")
+    elif signupFirstnameEntry.value.isalpha() == False: #Name contains no symbols or numbers
+        info("First Name", "First name cannot contain numbers or symbols!")
+    elif signupLastnameEntry.value == "": #Name has been entered
+        info("Last Name", "Please Enter Your last name!")
+    elif signupLastnameEntry.value.isalpha() == False: #Name contains no symbols or numbers
+        info("Last Name", "Last name cannot contain numbers or symbols!")
+    elif signupPhoneEntry.value.isnumeric() == False: #Ensures phonenumber is numerical
+        info("Phone Number", "Invalid phone number!")
+    elif len(signupPhoneEntry.value) != 11: #Phonenumber is the correct length
+        info("Phone Number", "Invalid phone number!")
+    elif signupDisplayNameEntry.value == "": #Makes sure a Display Name has been entered
+        info("Display Name", "Please Enter a Display name!")
+    else:
+        sqlinsert = 'INSERT INTO "userDetails" ("userFirstName","userSecondName","userPassword","userPhoneNum","userEmail","userDisplayName") VALUES ("'+signupFirstnameEntry.value+'","'+signupLastnameEntry.value+'","'+hashlib.sha512(signupPasswordEntry.value.encode('utf8')).hexdigest()+'","'+signupPhoneEntry.value+'","'+signupEmailEntry.value+'","'+signupDisplayNameEntry.value+'");'
+        execute_sql(database, sqlinsert) #Execute above SQL statement
+        sqlselect = "SELECT * FROM userDetails WHERE userEmail = '"+signupEmailEntry.value+"'"
+        rows = query_database(database, sqlselect)
+        user_LoggedIn = rows[0][0] #Then finds user and automaticly logs them in
+        signin.hide()
+        signup.hide()
+        forpass.hide()
+        mainmenu.show()
     
 signup = Window(app, title="Feet R'Us Signup!", height=310, width=450)
 sign_up_box = Box(signup, layout="grid")
