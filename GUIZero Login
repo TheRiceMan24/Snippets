@@ -1,19 +1,27 @@
-def login_user():  #Test the entered user details against the stored user data
-	global user_LoggedIn #variable needed to know who logged in
-	if signinUsernameEntry.value == "" or signinPasswordEntry.value == "":
-		info("Error", "Please fill in all feilds!")
-	else:
-		sqlselect = "SELECT * FROM CUSTOMER_DETAILS WHERE userName = '"+signinUsernameEntry.value+"'"
-		rows = query_database(database_file, sqlselect)
-		if len(rows) == 0: #This checks that the user was found ###
-				info("Error", "You must enter a valid Login")
-		elif rows[0][2] != signinPasswordEntry.value: #Takes password from row of SQL
-			info("Error", "You must enter a valid Login")
-		else:
-			info("Log in","Success")
-			user_LoggedIn = rows[0][0] #Notes the signed in users ID
-			signin.hide()
-			addreview.show() #Displays to review menu
+def login_user():  # TEST WITH database against entered details 
+    global user_LoggedIn ## variable needed to know who logged in ##
+    if signinEmailEntry.value == "" or signinPasswordEntry.value == "":
+        info("Error", "Please fill in all feilds!")
+    elif "'" in signinEmailEntry.value or ";" in signinEmailEntry.value or '"' in signinEmailEntry.value: # this helps mitigate SQL injection
+        info("Error", "Please Don't Try That!")
+    else:
+        try:
+            sqlselect = "SELECT * FROM userDetails WHERE userEmail = '"+signinEmailEntry.value+"'"
+            rows = query_database(database, sqlselect)
+        except:
+            rows = []
+        if len(rows) == 0: ### This checks that the user was found ###
+            info("Error", "You must enter a valid Login")
+        elif rows[0][3] != hashlib.sha512(signinPasswordEntry.value.encode('utf8')).hexdigest(): #Takes password from row of SQL
+            info("Error", "You must enter a valid Login")
+        else:
+            info("Log in","Success")
+            user_LoggedIn = rows[0][0] #Notes the signed in users ID
+            MenuLST[3].value = rows[0][8]
+            signin.hide()
+            signup.hide()
+            forpass.hide()
+            mainmenu.show()
       
 signin = Window(app, title="Feet R'Us Login!", height=130, width=300)
 sign_in_box = Box(signin, layout="grid")
