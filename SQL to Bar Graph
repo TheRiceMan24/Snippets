@@ -1,0 +1,16 @@
+def printGraph():
+    sqlselect = "SELECT DISTINCT bookingDate FROM Booking;"
+    listOfDatesup = query_database(database, sqlselect)
+    listOfDates = []
+    ListOfSeats = []
+    for x in listOfDatesup:
+        sqlcount = "SELECT COUNT(seatID) FROM Booking WHERE bookingDate = '"+str(x).lstrip("('").rstrip("',)")+"'"
+        ListOfSeats.append(int(str(query_database(database, sqlcount)).lstrip("[(").rstrip(",)]")))
+        listOfDates.append(str(x).lstrip("('").rstrip("',)"))
+    print(listOfDates)
+    print(ListOfSeats)
+    plt.xlabel("Date")
+    plt.ylabel("Seats Booked")
+    plt.bar(listOfDates, ListOfSeats)
+    plt.title("Seats Booked On Each Date!")
+    plt.show()
