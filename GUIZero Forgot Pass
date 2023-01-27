@@ -1,0 +1,35 @@
+##################################
+# Reset Password                 #
+##################################
+
+forpass = Window(app, title="ToKa Fitness Reset Password!", height=180, width=300)
+forpass_logo = Picture(forpass, image = logo, height = 50, width = 300)
+forpass_box = Box(forpass, layout="grid")
+forpassEmailText = Text(forpass_box, text="Email: ", grid=[0,1])
+forpassEmailEntry = TextBox(forpass_box, grid=[2,1], width=30)
+forpassPhoneNumText = Text(forpass_box, text="Phone Num: ", grid=[0,3])
+forpassPhoneNumEntry = TextBox(forpass_box, grid=[2,3], width=30)
+forpassPassText = Text(forpass_box, text="New Pass: ", grid=[0,5])
+forpassPassEntry = TextBox(forpass_box, grid=[2,5], width=30)
+forpassBottomBar = Box(forpass, align = "bottom")
+forpassChange = PushButton(forpassBottomBar, text="Change Pass",  width=15, height=2, align = "right", command=forpass_user)
+forpassBackButton = PushButton(forpassBottomBar, text="Back",  width=15, height=2, command=back_to_home, align = "right")
+
+forpass.hide()
+
+
+def forpass_user(): #Resets pasword based on other account information
+    if forpassEmailEntry.value == "" or forpassPhoneNumEntry.value == "" or forpassPassEntry.value == "":
+        info("Error", "Please fill in all feilds!")
+    elif "'" in forpassEmailEntry.value or ";" in forpassPhoneNumEntry.value or '"' in forpassPassEntry.value: # this helps mitigate SQL injection
+        info("Error", "Please Don't Try That!")
+    else:
+        try:
+            sqlupdate = "UPDATE userDetails SET userPassword = '"+hashlib.sha512(forpassPassEntry.value.encode('utf8')).hexdigest()+"' WHERE userEmail = '"+signinEmailEntry.value+"' AND userPhoneNum = '"+forpassPhoneNumEntry.value+"'"
+            execute_sql(database, sqlupdate)
+            signinEmailEntry.value = forpassEmailEntry.value
+            signinPasswordEntry.value = forpassPassEntry.value
+        except:
+            info("Error","Account Not Found!")
+        if signinPasswordEntry.value == forpassPassEntry.value:
+            login_user()
