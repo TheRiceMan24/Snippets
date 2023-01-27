@@ -1,3 +1,17 @@
+signin = Window(app, title="ToKa Fitness Login!", height=180, width=300)
+signin_logo = Picture(signin, image = logo, height = 50, width = 300)
+sign_in_box = Box(signin, layout="grid")
+signinEmailText = Text(sign_in_box, text="Email: ", grid=[0,1])
+signinEmailEntry = TextBox(sign_in_box, grid=[2,1], width=30)
+signinPasswordText = Text(sign_in_box, text="Password: ", grid=[0,3]) 
+signinPasswordEntry = TextBox(sign_in_box, grid=[2,3], width=30)
+signinBottomBar = Box(signin)
+signinLogin = PushButton(signinBottomBar, text="Login!",  width=15, height=2, align = "right", command=login_user)
+signinBackButton = PushButton(signinBottomBar, text="Back!",  width=15, height=2, command=back_to_home, align = "right")
+signinForgotPass = PushButton(signin, text="forgot password?",  width=15, height=1, command=goto_forpass)
+
+signin.hide()
+      
 def login_user():  # TEST WITH database against entered details 
     global user_LoggedIn ## variable needed to know who logged in ##
     if signinEmailEntry.value == "" or signinPasswordEntry.value == "":
@@ -15,21 +29,19 @@ def login_user():  # TEST WITH database against entered details
         elif rows[0][3] != hashlib.sha512(signinPasswordEntry.value.encode('utf8')).hexdigest(): #Takes password from row of SQL
             info("Error", "You must enter a valid Login")
         else:
+            if rows[0][7] == 1:
+                mainmenuButton3.disable()
+                mainmenuButton5.enable()
+                mainmenuButton7.enable()
+            else:
+                mainmenuButton3.enable()
+                mainmenuButton5.disable()
+                mainmenuButton7.disable()
             info("Log in","Success")
             user_LoggedIn = rows[0][0] #Notes the signed in users ID
+            CreateProgGraphs()
             MenuLST[3].value = rows[0][8]
             signin.hide()
             signup.hide()
             forpass.hide()
             mainmenu.show()
-      
-signin = Window(app, title="Feet R'Us Login!", height=130, width=300)
-sign_in_box = Box(signin, layout="grid")
-signinUsernameText = Text(sign_in_box, text="Username: ", grid=[0,1])
-signinUsernameEntry = TextBox(sign_in_box, grid=[2,1], width=30)
-signinPasswordText = Text(sign_in_box, text="Password: ", grid=[0,3])
-signinPasswordEntry = TextBox(sign_in_box, grid=[2,3], width=30)
-signinBottomBar = Box(signin)
-signinLogin = PushButton(signinBottomBar, text="Login!",  width=15, height=2, command=login_user, align = "right")
-signupBackButton = PushButton(signinBottomBar, text="Back!",  width=15, height=2, command=back_to_home, align = "right")
-signin.hide()
