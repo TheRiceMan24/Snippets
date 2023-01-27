@@ -1,0 +1,9 @@
+def set_date():
+    sqlcount = "SELECT COUNT(seatID) FROM Booking WHERE bookingDate = '"+str(date.value)+"'"
+    print("There are currently " + str(query_database(database, sqlcount)).lstrip("[(").rstrip(",)]") + "/30 Seats booked up!")
+    sqlselect = "SELECT seatID FROM Booking WHERE bookingDate = '"+str(date.value)+"'"
+    SeatIDS = query_database(database, sqlselect)
+    for x in buttons:
+        buttons[x].enable()
+    for x in SeatIDS:
+        sqlselect = "SELECT seatName FROM seat WHERE seatID = '"+str(x).lstrip("(").rstrip(",)")+"'"
