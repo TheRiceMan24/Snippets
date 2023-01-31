@@ -1,0 +1,10 @@
+import datetime
+from dateutil.relativedelta import relativedelta
+
+def AgeCheck(Year, Month, Day):
+    DoB = datetime.datetime(Year, Month, Day)
+    Current = datetime.datetime.now() - relativedelta(years=18)
+    if Current < DoB:
+        return False
+    else:
+        return True
