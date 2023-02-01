@@ -1,0 +1,8 @@
+import datetime
+
+def CheckDate(Year, Month, Day):
+    try:
+        CheckDate = datetime.datetime(Year, Month, Day)
+        return True
+    except:
+        return False
