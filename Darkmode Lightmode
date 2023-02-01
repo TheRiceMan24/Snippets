@@ -1,0 +1,11 @@
+def DarkLightMode():
+
+    #Switches the app to dark mode
+    if SettingLST[5].value == 1:
+        app.bg = "#960000"
+        logo = "DMLogo.png"
+
+    #switches the app to light mode
+    else:
+        app.bg = "#F67570"
+        logo = "Logo.png"
