@@ -1,37 +1,80 @@
 import sqlite3
 import os
+
 database = 'college.db'
+
 if os.path.exists(database):
     os.remove(database)
 
+if os.path.exists(database):
+    #removes the database file to ensure each run is a fresh start and not to fill the database with bogus data 
+    os.remove(database)
+
+#SQL To structure and create database
 sql = '''
 BEGIN TRANSACTION;
-DROP TABLE IF EXISTS "student";
-CREATE TABLE IF NOT EXISTS "student" (
-	"StudentID"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-	"FirstName"	TEXT,
-	"Surname"	TEXT,
-	"TutorID"	INTEGER,
-	FOREIGN KEY("TutorID") REFERENCES "tutor"("TutorID")
+DROP TABLE IF EXISTS "userDetails";
+CREATE TABLE IF NOT EXISTS "userDetails" (
+    "userID"    INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "userFirstName"    TEXT,
+    "userSecondName"    TEXT,
+    "userPassword"    TEXT,
+    "userPhoneNum"    TEXT,
+    "userEmail"    TEXT,
+    "userDisplayName"    TEXT,
+    "userPremiumStatus" INTEGER,
+    "userGoals" TEXT
 );
-DROP TABLE IF EXISTS "tutor";
-CREATE TABLE IF NOT EXISTS "tutor" (
-	"TutorID"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-	"FirstName"	TEXT,
-	"Surname"	TEXT
+DROP TABLE IF EXISTS "activityLog";
+CREATE TABLE IF NOT EXISTS "activityLog" (
+    "activityID"    INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "activityCalorieChange"    INTEGER,
+    "activityWeight"    REAL,
+    "activitySteps"    INTEGER,
+    "activityHeartRate"    INTEGER,
+    "activityDate"    DATE,
+    "userID"    INTEGER,
+    FOREIGN KEY("userID") REFERENCES "userDetails"("userID")
 );
-INSERT INTO "student" ("StudentID","FirstName","Surname","TutorID") VALUES (1,'FirstName1','LastName1',1),
- (2,'FirstName2','LastName1',2),
- (3,'FirstName3','LastName1',3),
- (4,'FirstName4','LastName1',4);
-INSERT INTO "tutor" ("TutorID","FirstName","Surname") VALUES (1,'Teacherfirst1','Teacherlast1'),
- (2,'Teacherfirst2','Teacherlast2'),
- (3,'Teacherfirst3','Teacherlast3');
+DROP TABLE IF EXISTS "workouts";
+CREATE TABLE IF NOT EXISTS "workouts" (
+    "workoutID"    INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "workoutType"    TEXT,
+    "workoutIntensity"    REAL,
+    "workoutDetailsImgPath"    TEXT
+);
+DROP TABLE IF EXISTS "MealPlans";
+CREATE TABLE IF NOT EXISTS "MealPlans" (
+    "mealID"    INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "mealType"    TEXT,
+    "mealDetailsImgPath"    TEXT
+);
+INSERT INTO "userDetails" ("userFirstName","userSecondName","userPassword","userPhoneNum","userEmail","userDisplayName","userPremiumStatus","userGoals") 
+VALUES ("Josh","Tice","4dff4ea340f0a823f15d3f4f01ab62eae0e5da579ccb851f8db9dfe84c58b2b37b89903a740e1ee172da793a6e79d560e5f7f9bd058a12a280433ed6fa46510a","07452959109","1","Your Mother", "1", "Get Fit,Get Laid,Get Your Mums Number"),
+("Aidan","Smith","4dff4ea340f0a823f15d3f4f01ab62eae0e5da579ccb851f8db9dfe84c58b2b37b89903a740e1ee172da793a6e79d560e5f7f9bd058a12a280433ed6fa46510a","08001111","Aidan.Freewill@chariy.yom","Kim","0","Become A Democrat,Meet a World Leader,Shake his hand");
+INSERT INTO "activityLog" ("activityCalorieChange","activityWeight","activitySteps","activityHeartRate","activityDate","userID") 
+VALUES ("-100","75","10394","120","24/11/2022","1"),
+("458","75.1","14454","158","25/11/2022","1"),
+("-1000","79","10098","134","24/11/2022","2"),
+("4588","99.1","14394","126","25/11/2022","2");
+INSERT INTO "workouts" ("workoutType","workoutIntensity","workoutDetailsImgPath") 
+VALUES ("CM","0.234","Squat.png"),
+("M","0.563","Dead Bug.png"),
+("C","0.211","Walking.png");
+INSERT INTO "MealPlans" ("mealType","mealDetailsImgPath") 
+VALUES ("D","Spiced Pork Tenderloin.png"),
+("B","Eggs and HashBrown.png"),
+("B","White Bean.png");
 COMMIT;
 '''
 
+#Connect to the database
 con = sqlite3.connect(database)
+#Get a cursor pointing to the database
 cur = con.cursor()
+#Create the tables
 cur.executescript(sql)
+#Commit to save everything
 con.commit()
+#Close the connection to the database
 con.close()
