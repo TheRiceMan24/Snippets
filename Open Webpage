@@ -1,0 +1,3 @@
+import webbrowser #Used to pull up web browser after search
+
+webbrowser.open("www.google.com")
